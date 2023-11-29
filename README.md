@@ -35,7 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## how to do migrations from app code to Supaase through drizzle?
+## how to do migrations from app code to Supabase through drizzle?
 
 First step is to generate schemas to migrations folder then run migration script by src/lib/supabase/db.ts .
 
