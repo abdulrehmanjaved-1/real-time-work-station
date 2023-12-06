@@ -44,7 +44,7 @@ const HomePage = () => {
         "
         >
           <Button
-            // variant="btn-secondary"
+            variant="btn-secondary"
             className=" w-full
             rounded-[10px]
             p-6
@@ -352,7 +352,7 @@ const HomePage = () => {
                     {card.description}
                   </p>
                   <Button
-                    // variant="btn-primary"
+                    variant="btn-primary"
                     className="whitespace-nowrap w-full mt-4"
                   >
                     {card.planType === PRICING_PLANS.proplan
