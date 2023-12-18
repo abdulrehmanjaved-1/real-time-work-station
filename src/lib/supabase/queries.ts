@@ -6,6 +6,7 @@ import db from "./db";
 import { File, Folder, Subscription, User, workspace } from "./supabase.types";
 import { validate } from "uuid";
 import { collaborators } from "./schema";
+import { revalidatePath } from "next/cache";
 
 export const getUserSubscriptionStatus = async (userId: string) => {
   try {
@@ -106,6 +107,23 @@ export const getCollaboratingWorkspaces = async (userId: string) => {
     .where(eq(users.id, userId))) as workspace[];
   return collaboratedWorkspaces;
 };
+export const getCollaborators = async (workspaceId: string) => {
+  const response = await db
+    .select()
+    .from(collaborators)
+    .where(eq(collaborators.workspaceId, workspaceId));
+  if (!response.length) return [];
+  const userInformation: Promise<User | undefined>[] = response.map(
+    async (user) => {
+      const exists = await db.query.users.findFirst({
+        where: (u, { eq }) => eq(u.id, user.userId),
+      });
+      return exists;
+    }
+  );
+  const resolvedUsers = await Promise.all(userInformation);
+  return resolvedUsers.filter(Boolean) as User[];
+};
 export const getSharedWorkspaces = async (userId: string) => {
   if (!userId) return [];
   const sharedWorkspaces = (await db
@@ -137,7 +155,7 @@ export const addCollaborators = async (users: User[], workspaceId: string) => {
   });
 };
 export const removeCollaborators = async (
-  users: User[],
+  users: User[], 
   workspaceId: string
 ) => {
   const response = users.forEach(async (user: User) => {
@@ -155,6 +173,10 @@ export const removeCollaborators = async (
           )
         );
   });
+};
+export const deleteWorkspace = async (workspaceId: string) => {
+  if (!workspaceId) return;
+  await db.delete(workspaces).where(eq(workspaces.id, workspaceId));
 };
 export const getUsersFromSearch = async (email: string) => {
   if (!email) return [];
@@ -189,6 +211,35 @@ export const updateFolder = async (
 export const createFile = async (file: File) => {
   try {
     await db.insert(files).values(file);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
+export const updateFile = async (file: Partial<File>, fileId: string) => {
+  try {
+    const response = await db
+      .update(files)
+      .set(file)
+      .where(eq(files.id, fileId));
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
+export const updateWorkspace = async (
+  workspace: Partial<workspace>,
+  workspaceId: string
+) => {
+  if (!workspaceId) return;
+  try {
+    await db
+      .update(workspaces)
+      .set(workspace)
+      .where(eq(workspaces.id, workspaceId));
+      revalidatePath(`/workspace/${workspaceId}`);
     return { data: null, error: null };
   } catch (error) {
     console.log(error);

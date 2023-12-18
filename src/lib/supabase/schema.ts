@@ -7,7 +7,7 @@ import {
   jsonb,
   integer,
 } from "drizzle-orm/pg-core";
-import { prices, subscriptionStatus, users } from "../../../migrations/schema";
+import { prices, subscriptionStatus } from "../../../migrations/schema";
 import { sql } from "drizzle-orm";
 
 export const workspaces = pgTable("workspaces", {
@@ -26,7 +26,15 @@ export const workspaces = pgTable("workspaces", {
   logo: text("logo"),
   bannerUrl: text("banner_url"),
 });
-
+export const users = pgTable("users", {
+	id: uuid("id").primaryKey().notNull(),
+	fullName: text("full_name"),
+	avatarUrl: text("avatar_url"),
+	billingAddress: jsonb("billing_address"),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }),
+	paymentMethod: jsonb("payment_method"),
+	email: text("email"),
+});
 export const folders = pgTable("folders", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   createdAt: timestamp("created_at", {
