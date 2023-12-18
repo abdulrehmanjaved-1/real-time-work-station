@@ -1,5 +1,5 @@
 {
-  "id": "3a05feac-23ed-4597-8311-2693c0ca098d",
+  "id": "6597b16e-9d42-4e9e-951e-9b80e1e82bb4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -8,6 +8,13 @@
       "name": "collaborators",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "workspace_id": {
           "name": "workspace_id",
           "type": "uuid",
@@ -77,12 +84,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "workspace_owner": {
-          "name": "workspace_owner",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
         "title": {
           "name": "title",
@@ -176,12 +177,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "workspace_owner": {
-          "name": "workspace_owner",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
         "title": {
           "name": "title",
