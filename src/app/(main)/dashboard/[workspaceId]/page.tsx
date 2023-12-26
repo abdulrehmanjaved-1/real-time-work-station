@@ -1,9 +1,21 @@
-import React from 'react'
+export const dynamic='force-dynamic';
+import QuillEditor from '@/components/quill-editor/quill-editor';
+import { getWorkspaceDetails } from '@/lib/supabase/queries';
+import { redirect } from 'next/navigation';
+import React from 'react';
 
-const WorkspacePage = () => {
+const Workspace = async ({params}:{params:{workspaceId:string}}) => {
+  const {data,error}=await getWorkspaceDetails(params.workspaceId);
+  if(error || !data.length)redirect('/dashboard');
   return (
-    <div>WorkspacePage</div>
+    <div className='relative'>
+      <QuillEditor
+      dirDetails={data[0] || {}}
+      fileId={params.workspaceId}
+      dirType='workspace'
+      />
+    </div>
   )
 }
 
-export default WorkspacePage
+export default Workspace

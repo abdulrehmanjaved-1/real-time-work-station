@@ -55,13 +55,13 @@ import { Alert, AlertDescription } from '../ui/alert';
 import CypressProfileIcon from '../icons/cypressProfileIcon';
 import LogoutButton from '../global/logout-button';
 import Link from 'next/link';
-// import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider';
-// import { postData } from '@/lib/utils';
+import { useSubscriptionModal } from '@/lib/providers/subscription-modal-provider';
+import { postData } from '@/lib/utils';
 
 const SettingsForm = () => {
   const { toast } = useToast();
   const { user, subscription } = useSupabaseUser();
-  // const { open, setOpen } = useSubscriptionModal();
+  const { open, setOpen } = useSubscriptionModal();
   const router = useRouter();
   const supabase = createClientComponentClient();
   const { state, workspaceId, dispatch } = useAppState();
@@ -76,24 +76,24 @@ const SettingsForm = () => {
 
   //WIP PAYMENT PORTAL
 
-  // const redirectToCustomerPortal = async () => {
-  //   setLoadingPortal(true);
-  //   try {
-  //     const { url, error } = await postData({
-  //       url: '/api/create-portal-link',
-  //     });
-  //     window.location.assign(url);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoadingPortal(false);
-  //   }
-  //   setLoadingPortal(false);
-  // };
+  const redirectToCustomerPortal = async () => {
+    setLoadingPortal(true);
+    try {
+      const { url, error } = await postData({
+        url: '/api/create-portal-link',
+      });
+      window.location.assign(url);
+    } catch (error) {
+      console.log(error);
+      setLoadingPortal(false);
+    }
+    setLoadingPortal(false);
+  };
   //addcollborators
   const addCollaborator = async (profile: User) => {
     if (!workspaceId) return;
     if (subscription?.status !== 'active' && collaborators.length >= 2) {
-      // setOpen(true);
+      setOpen(true);
       return;
     }
     await addCollaborators([profile], workspaceId);
@@ -122,7 +122,7 @@ const SettingsForm = () => {
     });
     if (titleTimerRef.current) clearTimeout(titleTimerRef.current);
     titleTimerRef.current = setTimeout(async () => {
-      await updateWorkspace({ title: e.target.value }, workspaceId);
+      // await updateWorkspace({ title: e.target.value }, workspaceId);
     }, 500);
   };
 
@@ -431,7 +431,7 @@ const SettingsForm = () => {
         >
           View Plans <ExternalLink size={16} />
         </Link>
-        {/* {subscription?.status === 'active' ? (
+        {subscription?.status === 'active' ? (
           <div>
             <Button
               type="button"
@@ -456,7 +456,7 @@ const SettingsForm = () => {
               Start Plan
             </Button>
           </div>
-        )} */}
+        )}
       </>
       <AlertDialog open={openAlertMessage}>
         <AlertDialogContent>

@@ -5,6 +5,8 @@ import ThemeProvider from "@/lib/providers/next-theme-provider";
 import AppStateProvider from "@/lib/providers/state-provider";
 import { twMerge } from "tailwind-merge";
 import { SupabaseUserProvider } from "@/lib/providers/supabase-user-provider";
+import { SocketProvider } from "@/lib/providers/socket-provider";
+import { Toaster } from "@/components/ui/toaster";
 const inter = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,7 +24,11 @@ export default function RootLayout({
       <body className={twMerge("bg-background", inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AppStateProvider>
-            <SupabaseUserProvider>{children}</SupabaseUserProvider>
+            <SupabaseUserProvider>
+              <SocketProvider>{children}
+              <Toaster/>
+              </SocketProvider>
+            </SupabaseUserProvider>
           </AppStateProvider>
         </ThemeProvider>
       </body>
